@@ -1,0 +1,21 @@
+main : ${project.groupId}.treasure.TreasurePlugin
+name: Treasure
+version: ${project.version}
+description: ${project.description}
+author: ${project.author}
+commands:
+  treasure:
+    description: Main plugin command.
+    usage: /<command> [help|reload|info]
+    aliases: [treasures,tr,lootchest,lootchests,lc]
+permissions:
+ treasure.*:
+   description: Wildcard for all permissions.
+   default: op
+   children:
+     treasure.user: true
+ portalguns.user:
+   description: All default user permissions for treasures.
+   default: true
+   children:
+     treasure.something: true
