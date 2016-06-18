@@ -19,6 +19,10 @@
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
+        <repository>
+            <id>boxx-repo</id>
+            <url>http://jroossien.com/boxx/maven/com/jroossien/boxx/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -26,6 +30,12 @@
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
             <version>1.10-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.jroossien</groupId>
+            <artifactId>boxx</artifactId>
+            <version>0.1</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

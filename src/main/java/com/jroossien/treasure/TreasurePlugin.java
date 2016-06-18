@@ -1,19 +1,19 @@
 package com.jroossien.treasure;
 
-import com.jroossien.treasure.commands.Commands;
+import com.jroossien.boxx.commands.api.CmdRegistration;
+import com.jroossien.boxx.commands.api.exception.CmdAlreadyRegisteredException;
+import com.jroossien.boxx.messages.MessageConfig;
+import com.jroossien.treasure.commands.TreasureCmd;
 import com.jroossien.treasure.listeners.MainListener;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.util.logging.Logger;
 
 public class TreasurePlugin extends JavaPlugin {
 
     private static TreasurePlugin instance;
     private final Logger log = Logger.getLogger("Treasure");
-
-    private Commands cmds;
 
 
     @Override
@@ -27,25 +27,33 @@ public class TreasurePlugin extends JavaPlugin {
         instance = this;
         log.setParent(this.getLogger());
 
+        loadMessages();
         //TODO: Init configs
 
         //TODO: Init managers
 
-        cmds = new Commands(this);
-
+        registerCommands();
         registerListeners();
 
         log("loaded successfully");
     }
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        return cmds.onCommand(sender, cmd, label, args);
-    }
-
     private void registerListeners() {
         getServer().getPluginManager().registerEvents(new MainListener(this), this);
         //TODO: Register listeners
+    }
+
+    private void registerCommands() {
+        File configFile = new File(getDataFolder(), "commands.yml");
+        try {
+            CmdRegistration.register(this, new TreasureCmd(configFile));
+        } catch (CmdAlreadyRegisteredException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadMessages() {
+        new MessageConfig(this, "messages");
     }
 
     public void log(Object msg) {
