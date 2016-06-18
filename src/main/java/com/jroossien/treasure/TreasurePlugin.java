@@ -3,8 +3,12 @@ package com.jroossien.treasure;
 import com.jroossien.boxx.commands.api.CmdRegistration;
 import com.jroossien.boxx.commands.api.exception.CmdAlreadyRegisteredException;
 import com.jroossien.boxx.messages.MessageConfig;
+import com.jroossien.treasure.commands.LootCmd;
 import com.jroossien.treasure.commands.TreasureCmd;
+import com.jroossien.treasure.config.LootCfg;
 import com.jroossien.treasure.listeners.MainListener;
+import com.jroossien.treasure.loot.LootManager;
+import com.jroossien.treasure.loot.LootMenu;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -12,8 +16,17 @@ import java.util.logging.Logger;
 
 public class TreasurePlugin extends JavaPlugin {
 
+    public static final int MIN_RARITY = 1;
+    public static final int MAX_RARITY = 100;
+
     private static TreasurePlugin instance;
     private final Logger log = Logger.getLogger("Treasure");
+
+    private LootCfg lootCfg;
+
+    private LootManager lm;
+
+    private LootMenu lootMenu;
 
 
     @Override
@@ -28,12 +41,15 @@ public class TreasurePlugin extends JavaPlugin {
         log.setParent(this.getLogger());
 
         loadMessages();
-        //TODO: Init configs
 
-        //TODO: Init managers
+        lootCfg = new LootCfg("plugins/Treasure/data/Loot.yml");
+
+        lm = new LootManager(this);
 
         registerCommands();
         registerListeners();
+
+        lootMenu = new LootMenu();
 
         log("loaded successfully");
     }
@@ -47,6 +63,7 @@ public class TreasurePlugin extends JavaPlugin {
         File configFile = new File(getDataFolder(), "commands.yml");
         try {
             CmdRegistration.register(this, new TreasureCmd(configFile));
+            CmdRegistration.register(this, new LootCmd(configFile));
         } catch (CmdAlreadyRegisteredException e) {
             e.printStackTrace();
         }
@@ -66,5 +83,20 @@ public class TreasurePlugin extends JavaPlugin {
 
     public static TreasurePlugin get() {
         return instance;
+    }
+
+
+    public LootCfg getLootCfg() {
+        return lootCfg;
+    }
+
+
+    public LootManager getLM() {
+        return lm;
+    }
+
+
+    public LootMenu getLootMenu() {
+        return lootMenu;
     }
 }
