@@ -4,11 +4,14 @@ import com.jroossien.boxx.commands.api.CmdRegistration;
 import com.jroossien.boxx.commands.api.exception.CmdAlreadyRegisteredException;
 import com.jroossien.boxx.messages.MessageConfig;
 import com.jroossien.treasure.commands.LootCmd;
+import com.jroossien.treasure.commands.PresetsCmd;
 import com.jroossien.treasure.commands.TreasureCmd;
 import com.jroossien.treasure.config.LootCfg;
 import com.jroossien.treasure.listeners.MainListener;
 import com.jroossien.treasure.loot.LootManager;
 import com.jroossien.treasure.loot.LootMenu;
+import com.jroossien.treasure.presets.PresetManager;
+import com.jroossien.treasure.presets.PresetMenu;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -25,8 +28,10 @@ public class TreasurePlugin extends JavaPlugin {
     private LootCfg lootCfg;
 
     private LootManager lm;
+    private PresetManager pm;
 
     private LootMenu lootMenu;
+    private PresetMenu presetMenu;
 
 
     @Override
@@ -45,11 +50,14 @@ public class TreasurePlugin extends JavaPlugin {
         lootCfg = new LootCfg("plugins/Treasure/data/Loot.yml");
 
         lm = new LootManager(this);
+        pm = new PresetManager(this);
+        pm.loadPresets();
 
         registerCommands();
         registerListeners();
 
         lootMenu = new LootMenu();
+        presetMenu = new PresetMenu();
 
         log("loaded successfully");
     }
@@ -64,6 +72,7 @@ public class TreasurePlugin extends JavaPlugin {
         try {
             CmdRegistration.register(this, new TreasureCmd(configFile));
             CmdRegistration.register(this, new LootCmd(configFile));
+            CmdRegistration.register(this, new PresetsCmd(configFile));
         } catch (CmdAlreadyRegisteredException e) {
             e.printStackTrace();
         }
@@ -71,6 +80,8 @@ public class TreasurePlugin extends JavaPlugin {
 
     private void loadMessages() {
         new MessageConfig(this, "messages");
+        new MessageConfig(this, "lootmenu");
+        new MessageConfig(this, "presetmenu");
     }
 
     public void log(Object msg) {
@@ -95,8 +106,16 @@ public class TreasurePlugin extends JavaPlugin {
         return lm;
     }
 
+    public PresetManager getPM() {
+        return pm;
+    }
+
 
     public LootMenu getLootMenu() {
         return lootMenu;
+    }
+
+    public PresetMenu getPresetMenu() {
+        return presetMenu;
     }
 }

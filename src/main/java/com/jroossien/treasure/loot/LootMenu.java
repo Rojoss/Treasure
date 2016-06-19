@@ -54,7 +54,7 @@ public class LootMenu extends Menu {
         lm = tr.getLM();
 
         // Menu bar (previous page | info | next page)
-        setSlots(new EItem(Material.STAINED_GLASS_PANE, (short)11).setName(""), 1,2,3,5,6,7);
+        setSlots(new EItem(Material.STAINED_GLASS_PANE, (short)7).setName(""), 1,2,3,5,6,7);
         setSlot(0, new EItem(Material.SKULL_ITEM).setOwner("MHF_ArrowLeft").setName(Msg.getString("lootmenu.prev-title")).setLore(Msg.getString("lootmenu.prev-lore")));
         setSlot(4, new EItem(Material.EMPTY_MAP).setName(Msg.getString("lootmenu.info-title")).setLore(Msg.getString("lootmenu.info-lore")));
         setSlot(8, new EItem(Material.SKULL_ITEM).setOwner("MHF_ArrowRight").setName(Msg.getString("lootmenu.next-title")).setLore(Msg.getString("lootmenu.next-lore")));
@@ -65,8 +65,7 @@ public class LootMenu extends Menu {
 
     @Override
     protected void onShow(InventoryOpenEvent event) {
-        Player player = (Player)event.getPlayer();
-        updateContent(player);
+        updateContent((Player)event.getPlayer());
     }
 
     @Override
@@ -135,14 +134,15 @@ public class LootMenu extends Menu {
             NMS.get().getSignGUI().show(player, new SignGUICallback() {
                 @Override
                 public void onEdit(String[] lines) {
-                    Integer rarity = Parse.Int(lines[0].trim());
+                    String input = Str.implode(lines, "").trim();
+                    Integer rarity = Parse.Int(input);
                     if (rarity == null) {
-                        Msg.get("lootmenu.rarity-notanumber", Param.P("input", lines[0])).send(player);
+                        Msg.get("lootmenu.rarity-notanumber", Param.P("input", input)).send(player);
                         show(player);
                         return;
                     }
                     if (rarity < 1 || rarity > 100) {
-                        Msg.get("lootmenu.rarity-invalid", Param.P("input", lines[0])).send(player);
+                        Msg.get("lootmenu.rarity-invalid", Param.P("input", input)).send(player);
                         show(player);
                         return;
                     }
