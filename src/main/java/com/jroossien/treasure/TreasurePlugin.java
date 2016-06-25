@@ -10,6 +10,8 @@ import com.jroossien.treasure.config.LootCfg;
 import com.jroossien.treasure.listeners.MainListener;
 import com.jroossien.treasure.loot.LootManager;
 import com.jroossien.treasure.loot.LootMenu;
+import com.jroossien.treasure.pool.PresetPoolManager;
+import com.jroossien.treasure.pool.PresetPoolMenu;
 import com.jroossien.treasure.presets.PresetManager;
 import com.jroossien.treasure.presets.PresetMenu;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -29,9 +31,11 @@ public class TreasurePlugin extends JavaPlugin {
 
     private LootManager lm;
     private PresetManager pm;
+    private PresetPoolManager ppm;
 
     private LootMenu lootMenu;
     private PresetMenu presetMenu;
+    private PresetPoolMenu presetPoolMenu;
 
 
     @Override
@@ -52,12 +56,15 @@ public class TreasurePlugin extends JavaPlugin {
         lm = new LootManager(this);
         pm = new PresetManager(this);
         pm.loadPresets();
+        ppm = new PresetPoolManager(this);
+        ppm.loadPools();
 
         registerCommands();
         registerListeners();
 
         lootMenu = new LootMenu();
         presetMenu = new PresetMenu();
+        presetPoolMenu = new PresetPoolMenu();
 
         log("loaded successfully");
     }
@@ -110,6 +117,10 @@ public class TreasurePlugin extends JavaPlugin {
         return pm;
     }
 
+    public PresetPoolManager getPPM() {
+        return ppm;
+    }
+
 
     public LootMenu getLootMenu() {
         return lootMenu;
@@ -117,5 +128,9 @@ public class TreasurePlugin extends JavaPlugin {
 
     public PresetMenu getPresetMenu() {
         return presetMenu;
+    }
+
+    public PresetPoolMenu getPresetPoolMenu() {
+        return presetPoolMenu;
     }
 }
